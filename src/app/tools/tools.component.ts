@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
+import { LectureGeneratorComponent } from '../lecture-generator/lecture-generator.component';
 
 @Component({
   selector: 'app-tools',
   standalone: true,
-  imports: [],
+  imports: [LectureGeneratorComponent],
   templateUrl: './tools.component.html',
   styleUrl: './tools.component.css'
 })
