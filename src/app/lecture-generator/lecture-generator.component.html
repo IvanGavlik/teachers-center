@@ -11,7 +11,7 @@
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" style="max-width:70%">
     <div class="modal-content">
-      <form>
+      <form #contactForm="ngForm" (ngSubmit)="onSubmit(contactForm)" >
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Generate lecture</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -23,12 +23,12 @@
                 <div class="row">
                   <div class="col-6">
                     <div class="mb-3">
-                      <input type="email" class="form-control" placeholder="Language" id="exampleInputEmail1" aria-describedby="emailHelp">
+                      <input type="text" class="form-control" placeholder="Language" id="language" name="language" ngModel>
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="mb-3">
-                      <select class="form-select" aria-label="Default select example">
+                      <select class="form-select" aria-label="Default select example" name="languageLevel" ngModel >
                         <option selected value="A1" >A1</option>
                         <option value="A2">A2</option>
                         <option value="B1">B1</option>
@@ -45,19 +45,19 @@
                   </div>
                   <div class="col-12">
                     <div class="mb-3">
-                      <textarea class="form-control" placeholder="Topic" id="exampleFormControlTextarea1" rows="1"></textarea>
+                      <textarea class="form-control" placeholder="Topic" id="topic" rows="1" name="vocabularyTopic" ngModel ></textarea>
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Size (number of words)</label>
-                      <input type="number" class="form-control" id="exampleInputPassword1">
+                      <label for="vocabularySize" class="form-label">Size (number of words)</label>
+                      <input type="number" class="form-control" id="vocabularySize" name="vocabularySize" ngModel >
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Generate questions</label>
-                      <select class="form-select" aria-label="Default select example">
+                      <label for="vocabularyQuestions" class="form-label">Generate questions</label>
+                      <select class="form-select" id="vocabularyQuestions" aria-label="Default select example" name="vocabularyQuestions" ngModel>
                         <option selected value="0" >0</option>
                         <option value="5">5</option>
                         <option value="7">7</option>
@@ -70,17 +70,17 @@
                 </div>
                 <div class="row" >
                   <div class="col-12">
-                    <h5> Gramar </h5>
+                    <h5> Grammar </h5>
                   </div>
                   <div class="col-12">
                     <div class="mb-3">
-                      <textarea class="form-control" placeholder="Topic" id="exampleFormControlTextarea1" rows="1"></textarea>
+                      <textarea class="form-control" placeholder="Topic" id="grammarTopic" rows="1" name="grammarTopic" ngModel ></textarea>
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Generate examples</label>
-                      <select class="form-select" aria-label="Default select example">
+                      <label for="grammarExamples" class="form-label">Generate examples</label>
+                      <select class="form-select" id="grammarExamples" aria-label="Default select example" name="grammarExamples" ngModel>
                         <option selected value="0" >0</option>
                         <option value="5">5</option>
                         <option value="7">7</option>
@@ -92,8 +92,8 @@
                   </div>
                   <div class="col-6">
                     <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Generate exercises</label>
-                      <select class="form-select" aria-label="Default select example">
+                      <label for="grammarExercises" class="form-label">Generate exercises</label>
+                      <select class="form-select" id="grammarExercises" aria-label="Default select example" name="grammarExercises" ngModel >
                         <option selected value="0" >0</option>
                         <option value="5">5</option>
                         <option value="7">7</option>
@@ -110,8 +110,8 @@
                   </div>
                   <div class="col-12">
                     <div class="mb-3 form-check">
-                      <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                      <label class="form-check-label" for="exampleCheck1">Homework</label>
+                      <input type="checkbox" class="form-check-input" id="homework" name="homework" ngModel  >
+                      <label class="form-check-label" for="homework" >Homework</label>
                     </div>
                   </div>
                   <!--					<div class="col-12">
@@ -122,195 +122,36 @@
                      </div> -->
                   <div class="col-12">
                     <div class="mb-3 form-check">
-                      <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                      <label class="form-check-label" for="exampleCheck1">Discussion questions for a dialogue</label>
+                      <input type="checkbox" class="form-check-input" id="discussion" name="discussion" ngModel >
+                      <label class="form-check-label" for="discussion">Discussion questions for a dialogue</label>
                     </div>
                   </div>
                   <div class="col-12">
                     <div class="mb-3 form-check">
-                      <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                      <label class="form-check-label" for="exampleCheck1">Dictonary on vocabulary topic</label>
+                      <input type="checkbox" class="form-check-input" id="dictionary" name="dictionary" ngModel  >
+                      <label class="form-check-label" for="dictionary">Dictionary on vocabulary topic</label>
                     </div>
                   </div>
 
 
                   <div class="col-12">
                     <div class="mb-3 form-check">
-                      <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                      <label class="form-check-label" for="exampleCheck1">Common phrases on topic</label>
+                      <input type="checkbox" class="form-check-input" id="commonPhrases" name="commonPhrases" ngModel  >
+                      <label class="form-check-label" for="commonPhrases">Common phrases on topic</label>
                     </div>
                   </div>
 
                 </div>
               </div>
-              <div class="col-7" style="border 1px solid black 25%; overflow: auto; height: 600px;" >
-
-
+              <div class="col-7" style="border 1px solid black 25%; overflow: auto; height: 600px; background: #d9d9d9" > <!-- #e6e6e6 -->
                 <div [innerHTML]="response"></div>
-                <!--               <markdown [data]="response">
-                                </markdown>-->
-
-
-                <!--    <pre>
-German Vocabulary about Himmel, Mond, Licht
-
-Nouns (Nomen)
-
-German	English	Article	Plural
-der Himmel	sky	der	die Himmel
-der Mond	moon	der	die Monde
-das Licht	light	das	die Lichter
-der Stern	star	der	die Sterne
-die Wolke	cloud	die	die Wolken
-die Dunkelheit	darkness	die	— (no plural)
-die Sonne	sun	die	die Sonnen
-der Sonnenaufgang	sunrise	der	die Sonnenaufgänge
-der Sonnenuntergang	sunset	der	die Sonnenuntergänge
-die Atmosphäre	atmosphere	die	die Atmosphären
-das Wetter	weather	das	die Wetter
-das Abendrot	dusk, evening glow	das	die Abendrote
-der Regenbogen	rainbow	der	die Regenbogen
-der Strahl	ray	der	die Strahlen
-
-Verbs (Verben)
-
-    scheinen (to shine)
-        Präsens:
-            ich scheine
-           du scheinst
-            er/sie/es scheint
-            wir scheinen
-            ihr scheint
-            sie/Sie scheinen
-        Perfekt: hat geschienen
-
-    leuchten (to glow, shine)
-        Präsens:
-            ich leuchte
-            du leuchtest
-            er/sie/es leuchtet
-            wir leuchten
-            ihr leuchtet
-            sie/Sie leuchten
-        Perfekt: hat geleuchtet
-
-    aufgehen (to rise, e.g., sun/moon)
-        Präsens:
-            ich gehe auf
-            du gehst auf
-            er/sie/es geht auf
-            wir gehen auf
-            ihr geht auf
-            sie/Sie gehen auf
-        Perfekt: ist aufgegangen
-
-    untergehen (to set, e.g., sun)
-        Präsens:
-            ich gehe unter
-            du gehst unter
-            er/sie/es geht unter
-            wir gehen unter
-            ihr geht unter
-            sie/Sie gehen unter
-        Perfekt: ist untergegangen
-
-    verschwinden (to disappear)
-        Präsens:
-            ich verschwinde
-            du verschwindest
-            er/sie/es verschwindet
-            wir verschwinden
-            ihr verschwindet
-            sie/Sie verschwinden
-        Perfekt: ist verschwunden
-
-Common Adverbs (Adverbien)
-
-    hell (bright)
-    dunkel (dark)
-    ruhig (calmly)
-    langsam (slowly)
-    schnell (quickly)
-
-Common Prepositions (Präpositionen)
-
-    über (above)
-    unter (under)
-    neben (next to)
-    in (in)
-    durch (through)
-
-Common Phrases (Redewendungen)
-
-    Im Mondlicht (In the moonlight)
-    Die Sterne beobachten (Watching the stars)
-    Die Sonne geht auf/unter (The sun rises/sets)
-    Der Himmel ist klar (The sky is clear)
-    Ein schöner Sonnenaufgang (A beautiful sunrise)
-
-Text on the Topic
-
-Der Himmel ist heute besonders schön. Am Abend sieht man den Mond hell am Himmel leuchten, und die Sterne scheinen ruhig und klar. Wenn die Sonne untergeht, färbt sich der Himmel in vielen Farben, wie Orange und Rosa. Die Dunkelheit kommt langsam, und das Licht verschwindet. Der Mond geht auf und erleuchtet die Nacht, wenn keine Wolken den Himmel bedecken. Die Sterne leuchten in der Dunkelheit, und viele Leute mögen es, im Mondlicht spazieren zu gehen. Am Morgen, wenn die Sonne aufgeht, beginnt ein neuer Tag, und das Licht kehrt zurück. Der Sonnenaufgang ist oft ruhig und schön.
-Questions on the Text
-
-    Wie ist der Himmel heute?
-    Wann sieht man den Mond?
-    Welche Farben hat der Himmel bei Sonnenuntergang?
-    Was passiert, wenn die Dunkelheit kommt?
-    Wann beginnt ein neuer Tag?
-    Was leuchtet in der Nacht?
-
-Exercises
-1. Determine the Correct Article and Form the Plural
-
-Schreibe den richtigen Artikel und den Plural:
-
-    ___ Himmel
-    ___ Mond
-    ___ Licht
-    ___ Stern
-    ___ Wolke
-    ___ Dunkelheit
-    ___ Sonnenaufgang
-
-2. Conjugate Verbs in the Present Tense
-
-Konjugiere die Verben:
-
-    scheinen (ich, du, er/sie/es, wir, ihr, sie/Sie)
-    leuchten (ich, du, er/sie/es, wir, ihr, sie/Sie)
-    aufgehen (ich, du, er/sie/es, wir, ihr, sie/Sie)
-    untergehen (ich, du, er/sie/es, wir, ihr, sie/Sie)
-
-Discussion Questions for a Dialogue
-
-    Magst du den Mond oder die Sonne mehr?
-    Hast du schon einmal Sterne beobachtet? Wann?
-    Gehst du gern bei Sonnenuntergang spazieren?
-    Siehst du gern Sonnenaufgänge oder Sonnenuntergänge?
-    Was machst du gern im Mondlicht?
-    Glaubst du, dass Sterne leuchten, wenn es dunkel ist?
-
-Homework Tasks
-
-    Schreibe einen kurzen Text
-    Beschreibe den Himmel in der Nacht und am Morgen. Verwende neue Wörter und beschreibe, was du siehst.
-
-    Verb Practice:
-    Erstelle drei Sätze für jedes Verb aus der Liste oben (scheinen, leuchten, aufgehen, untergehen).
-
-    Fragen und Antworten:
-    Schreibe drei Fragen über den Himmel, den Mond oder die Sonne. Beantworte die Fragen auch selbst.
-
-
-							  </pre> -->
               </div>
             </div>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" (click)="sendPrompt()" class="btn btn-primary">Chat</button> <!-- TODO enable after generation -->
+          <button type="submit" class="btn btn-primary">Chat</button> <!-- TODO enable after generation -->
           <button type="submit" class="btn btn-primary">Generate</button>
         </div>
       </form>
