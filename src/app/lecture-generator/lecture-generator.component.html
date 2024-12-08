@@ -144,7 +144,14 @@
                 </div>
               </div>
               <div class="col-7" style="border 1px solid black 25%; overflow: auto; height: 600px;" >
-                              <pre>
+
+
+                <div [innerHTML]="response"></div>
+                <!--               <markdown [data]="response">
+                                </markdown>-->
+
+
+                <!--    <pre>
 German Vocabulary about Himmel, Mond, Licht
 
 Nouns (Nomen)
@@ -296,16 +303,14 @@ Homework Tasks
     Schreibe drei Fragen über den Himmel, den Mond oder die Sonne. Beantworte die Fragen auch selbst.
 
 
-
-
-							  </pre>
+							  </pre> -->
               </div>
             </div>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Chat</button> <!-- TODO enable after generation -->
+          <button type="submit" (click)="sendPrompt()" class="btn btn-primary">Chat</button> <!-- TODO enable after generation -->
           <button type="submit" class="btn btn-primary">Generate</button>
         </div>
       </form>
