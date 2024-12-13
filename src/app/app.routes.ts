@@ -5,6 +5,7 @@ import { ToolsComponent } from './tools/tools.component';
 
 
 export const routes: Routes = [
+  {path: '*', component: LandingComponent},
   {path: '', component: LandingComponent},
   {path: 'tools', component: LayoutComponent,
     children: [
