@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class OpenaiService {
 
    private apiUrl = 'https://api.openai.com/v1/chat/completions';
-   private apiKey = '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'; // Replace with your OpenAI API key
+   private apiKey = 'some key'; // Replace with your OpenAI API key
 
    constructor(private http: HttpClient) { }
 
