@@ -7,26 +7,31 @@ import { ConfigService } from '../config.service';
 @Injectable({
   providedIn: 'root'
 })
-export class OpenaiService  implements OnInit {
+export class OpenaiService {
 
    private apiUrl = 'https://api.openai.com/v1/chat/completions';
-   private apiKey = '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'; // Replace with your OpenAI API key
+   private apiKey = ''; // Replace with your OpenAI API key
 
-   constructor(private http: HttpClient, private cs: ConfigService) {}
+   constructor(private http: HttpClient, private cs: ConfigService) {
 
-    ngOnInit(): void {
-        this.cs.getConfig().subscribe(
-          (response: any) => {
-            console.log('Config File Data:', response);
-             this.apiKey = response;
-          },
-          (error: any) => {
-            console.error('Error fetching file:', error);
-          }
-        );
-      }
+     const httpOptions : Object = {
+       headers: new HttpHeaders({
+         'Accept': 'text/plain',
+         'Content-Type': 'text/plain; charset=utf-8'
+       }),
+       responseType: 'text'
+     };
+
+     this.http.get<any>('https://thawing-cove-37000-15e18dd2b745.herokuapp.com/key', httpOptions)
+      .subscribe((res: any) => {
+        console.log('res ' + res);
+        this.apiKey = res;
+      });
+   }
 
    getChatCompletionWithContext(systemPrompt: string, userPrompt: string): Observable<any> {
+     console.log('key ' + this.apiKey);
+
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: `Bearer ${this.apiKey}`,
