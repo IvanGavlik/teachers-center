@@ -15,7 +15,8 @@ import { NgForm } from '@angular/forms';
 })
 export class LectureGeneratorComponent {
 
-  response: any = 'Placeholder for generated lecture content';
+  response: any = '';
+  showLoading: boolean = false;
 
   constructor(private openaiService: OpenaiService, private markdownService: MarkdownService) {}
 
@@ -38,6 +39,9 @@ export class LectureGeneratorComponent {
 
   sendPrompt(lecture: Lecture) {
 
+    this.showLoading = true;
+    this.response = '';
+
      console.log(lecture.system());
      console.warn(lecture.lecture());
 
@@ -48,10 +52,14 @@ export class LectureGeneratorComponent {
            this.response = this.markdownService.parse(newStr)  as string;
         },
         (err) => {
+              this.showLoading = false;
           console.error('Error:', err);
         },
-        () =>  {}
+        () =>  {
+                        this.showLoading = false;
+          }
       );
+
 
 
     }

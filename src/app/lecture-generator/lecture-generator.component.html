@@ -146,6 +146,12 @@
               </div>
               <div class="col-7" style="border 1px solid black 25%; overflow: auto; height: 600px; background: #d9d9d9" > <!-- #e6e6e6 -->
                 <div [innerHTML]="response"></div>
+                <p style="height: 40%"> </p>
+                <p style="text-align: center;" *ngIf="showLoading">  Generating lecture </p>
+                <div class="d-flex justify-content-center" *ngIf="showLoading" >
+                  <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                  </div>
+                </div>
               </div>
             </div>
           </div>
