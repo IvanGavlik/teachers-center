@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { OpenaiService } from '../openai/openai.service';
 import { MarkdownService } from 'ngx-markdown';
 import { Lecture } from './lecture';
@@ -14,7 +14,7 @@ import { CountdownModule } from 'ngx-countdown';
   templateUrl: './lecture-generator.component.html',
   styleUrl: './lecture-generator.component.css'
 })
-export class LectureGeneratorComponent {
+export class LectureGeneratorComponent  implements OnInit {
 
   response: any = '';
   showLoading: boolean = false;
@@ -23,14 +23,19 @@ export class LectureGeneratorComponent {
 
   constructor(private openaiService: OpenaiService, private markdownService: MarkdownService) {}
 
+  ngOnInit(): void {
+     this.showLoading = true;
+        this.response = '';
+  }
+
   onSubmit(contactForm: any) {
       this.sendPrompt(new Lecture(
-              !contactForm.value.language ?  'German' : contactForm.value.language,
-              !contactForm.value.languageLevel ?  'A1' : contactForm.value.languageLevel,
-              !contactForm.value.vocabularyTopic ? 'Family' : contactForm.value.vocabularyTopic,
+              !contactForm.value.language ?  'German' : contactForm.value.language.trim(),
+              !contactForm.value.languageLevel ?  'A1' : contactForm.value.languageLevel.trim(),
+              !contactForm.value.vocabularyTopic ? 'Family' : contactForm.value.vocabularyTopic.trim(),
               !contactForm.value.vocabularySize ? 0 : contactForm.value.vocabularySize,
               !contactForm.value.vocabularyQuestions ? 0 : contactForm.value.vocabularyQuestions,
-              !contactForm.value.grammarTopic ? 'Prezent' : contactForm.value.grammarTopic,
+              !contactForm.value.grammarTopic ? 'Prezent' : contactForm.value.grammarTopic.trim(),
               !contactForm.value.grammarExamples ? 0 : contactForm.value.grammarExamples,
               !contactForm.value.grammarExercises ? 0 : contactForm.value.grammarExercises,
               !contactForm.value.homework  ? false : contactForm.value.homework,
