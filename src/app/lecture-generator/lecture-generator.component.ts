@@ -5,11 +5,12 @@ import { Lecture } from './lecture';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgForm } from '@angular/forms';
+import { CountdownModule } from 'ngx-countdown';
 
 @Component({
   selector: 'app-lecture-generator',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, CountdownModule],
   templateUrl: './lecture-generator.component.html',
   styleUrl: './lecture-generator.component.css'
 })
@@ -17,6 +18,8 @@ export class LectureGeneratorComponent {
 
   response: any = '';
   showLoading: boolean = false;
+
+ // @ViewChild('cd', { static: false }) private countdown: CountdownComponent;
 
   constructor(private openaiService: OpenaiService, private markdownService: MarkdownService) {}
 
@@ -39,6 +42,8 @@ export class LectureGeneratorComponent {
 
   sendPrompt(lecture: Lecture) {
 
+  //  this.countdown.begin();
+
     this.showLoading = true;
     this.response = '';
 
@@ -56,8 +61,12 @@ export class LectureGeneratorComponent {
           }
       );
 
-
+//    this.countdown.stop();
 
     }
+
+  handleEvent(event: any) {
+
+  }
 
 }
