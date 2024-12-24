@@ -24,7 +24,7 @@ export class LectureGeneratorComponent  implements OnInit {
   constructor(private openaiService: OpenaiService, private markdownService: MarkdownService) {}
 
   ngOnInit(): void {
-     this.showLoading = true;
+     this.showLoading = false;
         this.response = '';
   }
 
