@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ConfigService } from '../config.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +10,7 @@ export class OpenaiService {
    private apiUrl = 'https://api.openai.com/v1/chat/completions';
    private apiKey = ''; // Replace with your OpenAI API key
 
-   constructor(private http: HttpClient, private cs: ConfigService) {
+   constructor(private http: HttpClient) {
 
      const httpOptions : Object = {
        headers: new HttpHeaders({

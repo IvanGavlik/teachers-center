@@ -31,3 +31,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 https://angular.dev/tools/cli/deployment#automatic-deployment-with-the-cli
 
 ng deploy --base-href=/teachers-center/
+
+## IDE
+
+web storm
