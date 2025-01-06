@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgForm } from '@angular/forms';
 import { CountdownModule } from 'ngx-countdown';
+import {KeyService} from '../key.service';
 
 @Component({
   selector: 'app-lecture-generator',
@@ -21,11 +22,16 @@ export class LectureGeneratorComponent  implements OnInit {
 
  // @ViewChild('cd', { static: false }) private countdown: CountdownComponent;
 
-  constructor(private openaiService: OpenaiService, private markdownService: MarkdownService) {}
+  constructor(private key: KeyService, private openaiService: OpenaiService, private markdownService: MarkdownService) {}
 
   ngOnInit(): void {
      this.showLoading = false;
         this.response = '';
+
+     this.key.fetchKey().subscribe({
+      next: (data) => console.info(' key:', data),
+      error: (err) => console.error('Error fetching key:', err),
+    });;
   }
 
   onSubmit(contactForm: any) {

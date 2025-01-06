@@ -9,7 +9,7 @@ import { Lecture } from '../lecture-generator/lecture';
 })
 export class OpenaiService {
 
-   private baseUrl = 'https://teachers-center-be.onrender.com:3000';
+   private baseUrl = 'https://teachers-center-be.onrender.com';
 //  private baseUrl = 'http://teachers-center-be.onrender.com/';
 
 
