@@ -1,55 +1,61 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { OpenaiService } from '../openai/openai.service';
 import { MarkdownService } from 'ngx-markdown';
 import { Lecture } from './lecture';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgForm } from '@angular/forms';
+import { CountdownModule } from 'ngx-countdown';
 
 @Component({
   selector: 'app-lecture-generator',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, CountdownModule],
   templateUrl: './lecture-generator.component.html',
   styleUrl: './lecture-generator.component.css'
 })
-export class LectureGeneratorComponent {
+export class LectureGeneratorComponent  implements OnInit {
 
   response: any = '';
   showLoading: boolean = false;
 
+ // @ViewChild('cd', { static: false }) private countdown: CountdownComponent;
+
   constructor(private openaiService: OpenaiService, private markdownService: MarkdownService) {}
+
+  ngOnInit(): void {
+     this.showLoading = false;
+        this.response = '';
+  }
 
   onSubmit(contactForm: any) {
       this.sendPrompt(new Lecture(
-              contactForm.value.language,
-              contactForm.value.languageLevel,
-              contactForm.value.vocabularyTopic,
-              contactForm.value.vocabularySize,
-              contactForm.value.vocabularyQuestions,
-              contactForm.value.grammarTopic,
-              contactForm.value.grammarExamples,
-              contactForm.value.grammarExercises,
-              contactForm.value.homework,
-              contactForm.value.discussion,
-              contactForm.value.dictionary,
-             contactForm.value.commonPhrases
+              !contactForm.value.language ?  'German' : contactForm.value.language.trim(),
+              !contactForm.value.languageLevel ?  'A1' : contactForm.value.languageLevel.trim(),
+              !contactForm.value.vocabularyTopic ? 'Family' : contactForm.value.vocabularyTopic.trim(),
+              !contactForm.value.vocabularySize ? 0 : contactForm.value.vocabularySize,
+              !contactForm.value.vocabularyQuestions ? 0 : contactForm.value.vocabularyQuestions,
+              !contactForm.value.grammarTopic ? 'Prezent' : contactForm.value.grammarTopic.trim(),
+              !contactForm.value.grammarExamples ? 0 : contactForm.value.grammarExamples,
+              !contactForm.value.grammarExercises ? 0 : contactForm.value.grammarExercises,
+              !contactForm.value.homework  ? false : contactForm.value.homework,
+              !contactForm.value.discussion   ? false : contactForm.value.discussion,
+              !contactForm.value.dictionary   ? false : contactForm.value.dictionary,
+             !contactForm.value.commonPhrases   ? false : contactForm.value.commonPhrases
         ));
   }
 
   sendPrompt(lecture: Lecture) {
 
+  //  this.countdown.begin();
+
     this.showLoading = true;
     this.response = '';
 
-     console.log(lecture.system());
-     console.warn(lecture.lecture());
-
-    this.openaiService.getChatCompletionWithContext(lecture.system(),lecture.lecture())
+    this.openaiService.getChatCompletion(lecture)
       .subscribe(
         (res) => {
-          let newStr = res.choices[0].message.content;
-           this.response = this.markdownService.parse(newStr)  as string;
+           this.response =  this.markdownService.parse(res)  as string;
         },
         (err) => {
               this.showLoading = false;
@@ -60,6 +66,12 @@ export class LectureGeneratorComponent {
           }
       );
 
+//    this.countdown.stop();
+
     }
+
+  handleEvent(event: any) {
+
+  }
 
 }
