@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import { OnInit } from '@angular/core';
-import {Observable, switchMap} from 'rxjs';
+import {Observable, forkJoin, mergeMap} from 'rxjs';
 import { Lecture } from '../lecture-generator/lecture';
 
 @Injectable({
@@ -9,13 +9,13 @@ import { Lecture } from '../lecture-generator/lecture';
 })
 export class OpenaiService {
 
-   private baseUrl = 'https://teachers-center-be.onrender.com';
-//  private baseUrl = 'http://teachers-center-be.onrender.com/';
+  private baseUrl = 'https://teachers-center-be.onrender.com';
+//  private baseUrl = 'http://localhost:3000';
 
 
    constructor(private http: HttpClient) {}
 
-   getChatCompletion(lecture: Lecture): Observable<any> {
+   getChatCompletion(lecture: Lecture) {
 //    return this.http.get(this.apiUrl + lecture.url(),  { responseType: 'text' });
 
      const queryParams = new HttpParams()
@@ -31,16 +31,57 @@ export class OpenaiService {
        .set('discussion', lecture.discussion.toString())
        .set('dictionary', lecture.dictionary.toString())
        .set('common-phrases', lecture.commonPhrases.toString());
-
-     return this.generateLectureText(queryParams).pipe(
-       switchMap((lectureTextResponse) =>
-         this.generateTextQuestions(lectureTextResponse, queryParams).pipe(
-           switchMap(() =>
-             this.generateGrammarExplanation(lectureTextResponse, queryParams)
-           )
-         )
+/*
+     return this.generateLectureText(queryParams)
+                                        .pipe(
+         switchMap((lectureTextResponse) =>
+             this.generateTextQuestions(lectureTextResponse, queryParams)
+       .pipe(switchMap(() => this.generateGrammarExplanation(lectureTextResponse, queryParams)))
        )
      );
+*/
+     var obs = new Observable((observer: any) => {
+       observer.next("get text");
+       observer.complete();
+     })
+
+
+
+     let obsVocabulary = new Observable((observer: any) => {
+       observer.next("get vocabulary");
+       observer.complete();
+     });
+
+     let obsGrammar = new Observable((observer: any) => {
+       observer.next("get grammar explanation");
+       observer.complete();
+     });
+
+     obs.subscribe((text: any) => {
+       console.log("I have " + text);
+       forkJoin(
+         [obsVocabulary, obsGrammar]
+       )
+         .subscribe((result : [any, any]) => {
+           console.log(result);
+         });
+     });
+
+     let result = '';
+     this.generateLectureText(queryParams).subscribe((text: any) => {
+       result = text;
+       forkJoin(
+         [
+           this.generateTextQuestions(text,queryParams),
+           this.generateGrammarExplanation(text, queryParams)
+         ])
+         .subscribe((response : [any, any]) => {
+           result += response[0];
+           result += response[1];
+            console.log("final " + result);
+         });
+     });
+
 
   }
 
@@ -54,7 +95,7 @@ export class OpenaiService {
 
   // Method to call /generate-lecture/text-questions
   generateTextQuestions(lectureTextResponse: string, queryParams: HttpParams): Observable<any> {
-    return this.http.post(`${this.baseUrl}/generate-lecture/text-questions`,
+     return this.http.post(`${this.baseUrl}/generate-lecture/text-questions`,
       { text: lectureTextResponse }, // Body includes the lectureTextResponse
       { params: queryParams, responseType: 'text' }
       );
@@ -68,6 +109,51 @@ export class OpenaiService {
       { text: lectureTextResponse }, // Body includes the lectureTextResponse
       { params: queryParams, responseType: 'text' }
       );
+  }
+
+  generateGrammarExercises(
+    lectureTextResponse: string, queryParams: HttpParams
+  ): Observable<any> {
+    return this.http.post(`${this.baseUrl}/generate-lecture/grammar-exercises`,
+      { text: lectureTextResponse }, // Body includes the lectureTextResponse
+      { params: queryParams, responseType: 'text' }
+    );
+  }
+
+  generateHomework(
+    lectureTextResponse: string, queryParams: HttpParams
+  ): Observable<any> {
+    return this.http.post(`${this.baseUrl}/generate-lecture/homework`,
+      { text: lectureTextResponse }, // Body includes the lectureTextResponse
+      { params: queryParams, responseType: 'text' }
+    );
+  }
+
+  generateDiscussion(
+    lectureTextResponse: string, queryParams: HttpParams
+  ): Observable<any> {
+    return this.http.post(`${this.baseUrl}/generate-lecture/discussion`,
+      { text: lectureTextResponse }, // Body includes the lectureTextResponse
+      { params: queryParams, responseType: 'text' }
+    );
+  }
+
+  generateDictionary(
+    lectureTextResponse: string, queryParams: HttpParams
+  ): Observable<any> {
+    return this.http.post(`${this.baseUrl}/generate-lecture/dictionary`,
+      { text: lectureTextResponse }, // Body includes the lectureTextResponse
+      { params: queryParams, responseType: 'text' }
+    );
+  }
+
+  generatePhrases(
+    lectureTextResponse: string, queryParams: HttpParams
+  ): Observable<any> {
+    return this.http.post(`${this.baseUrl}/generate-lecture/phrases`,
+      { text: lectureTextResponse }, // Body includes the lectureTextResponse
+      { params: queryParams, responseType: 'text' }
+    );
   }
 
 }
