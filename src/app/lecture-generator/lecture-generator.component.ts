@@ -7,7 +7,6 @@ import { CommonModule } from '@angular/common';
 import { CountdownModule } from 'ngx-countdown';
 import {KeyService} from '../key.service';
 import {HttpParams} from '@angular/common/http';
-import {forkJoin, scan} from 'rxjs';
 
 @Component({
   selector: 'app-lecture-generator',
@@ -78,34 +77,134 @@ export class LectureGeneratorComponent  implements OnInit {
       .set('dictionary', lecture.dictionary.toString())
       .set('common-phrases', lecture.commonPhrases.toString());
 
-    let resultTemp = '';
+    let resultTemp0 = '';
+    let resultTemp1 = '';
+    let resultTemp2 = '';
+    let resultTemp3 = '';
+    let resultTemp4 = '';
+    let resultTemp5 = '';
+    let resultTemp6 = '';
+    let allTemp = '';
+
+    this.openaiService.generateLectureText(queryParams).subscribe((text: any) => {
+      console.log("text " + text);
+      allTemp = text;
+
+      this.openaiService.generateTextQuestions(text,queryParams).subscribe((textQuestions) => {
+        console.log("textQuestions " + textQuestions);
+        allTemp = allTemp + textQuestions;
+        this.openaiService.generateGrammarExplanation(text,queryParams).subscribe((grammarExplanation) => {
+          console.log("grammarExplanation " + grammarExplanation);
+          allTemp = allTemp + grammarExplanation;
+
+          this.openaiService.generateGrammarExercises(text,queryParams).subscribe((grammarExercises) => {
+            console.log("grammarExercises " + grammarExercises);
+            allTemp = allTemp + grammarExercises;
+
+            this.openaiService.generateHomework(text,queryParams).subscribe((homework) => {
+              console.log("homework " + homework);
+              allTemp = allTemp + homework;
+
+              this.openaiService.generateDiscussion(text,queryParams).subscribe((discussion) => {
+                console.log("discussion " + discussion);
+                allTemp = allTemp + discussion;
+
+                this.openaiService.generateDictionary(text,queryParams).subscribe((dictionary) => {
+                  console.log("dictionary " + dictionary);
+                  allTemp = allTemp + dictionary;
+
+                  this.openaiService.generatePhrases(text,queryParams)
+                    .subscribe(
+                    (res) => {
+                      console.log("Phrases " + res);
+                      allTemp = allTemp + res;
+                      this.response =  this.markdownService.parse(allTemp)  as string;
+                    },
+                    (err) => {
+                      this.showLoading = false;
+                      this.response = err;
+                      console.error('Error:', err);
+                    },
+                    () =>  {
+                      this.showLoading = false;
+                    }
+                  );
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    /*
     this.openaiService.generateLectureText(queryParams).subscribe((text: any) => {
       // TODO MAKE INTO TO fe THAT  THAT i HAVE WORK IN PROGRESS AND ONE PART IS ONE this.progress is not working
       console.log("T is generated " + text );
-      resultTemp = text;
-      forkJoin(
+       forkJoin(
         [
-          this.openaiService.generateTextQuestions(text,queryParams).pipe(scan((el) => {  console.log("Q is generated"); this.progress += "Text is generated" })),
-          this.openaiService.generateGrammarExplanation(text, queryParams).pipe(scan((el) => { this.progress += "Grammar Ex is generated" })),
-          this.openaiService.generateGrammarExercises(text, queryParams).pipe(scan((el) => { this.progress += "Text is generated" })),
+          this.openaiService.generateTextQuestions(text,queryParams),
+          this.openaiService.generateGrammarExplanation(text, queryParams),
+          this.openaiService.generateGrammarExercises(text, queryParams),
           // TODO here decided should I call endpoint
-          this.openaiService.generateHomework(text, queryParams).pipe(scan((el) => { this.progress += "Text is generated" })),
-          this.openaiService.generateDiscussion(text, queryParams).pipe(scan((el) => { this.progress += "Text is generated" })),
-          this.openaiService.generateDictionary(text, queryParams).pipe(scan((el) => { this.progress += "Text is generated" })),
-          this.openaiService.generatePhrases(text, queryParams).pipe(scan((el) => { this.progress += "Text is generated" })),
+          this.openaiService.generateHomework(text, queryParams),
+          this.openaiService.generateDiscussion(text, queryParams),
+          this.openaiService.generateDictionary(text, queryParams),
+          this.openaiService.generatePhrases(text, queryParams),
         ])
-        .subscribe((result : [any, any, any, any, any, any, any]) => {
-          resultTemp += result[0];
-          resultTemp += result[1];
-          resultTemp += result[2];
-          resultTemp += result[3];
-          resultTemp += result[4];
-          resultTemp += result[5];
-          resultTemp += result[6];
-          this.response =  this.markdownService.parse(resultTemp)  as string;
-          this.showLoading = false;
-        });
+        .subscribe(
+          (result : [any, any, any, any, any, any, any]) => {
+            resultTemp0 = result[0];
+            console.log('resultTemp0 ' + resultTemp0);
+            resultTemp1 = result[1];
+            console.log('resultTemp1 ' + resultTemp1);
+            resultTemp2 = result[2];
+            console.log('resultTemp2 ' + resultTemp2);
+            resultTemp3 = '\\ ### Homework' + result[3];
+            console.log('resultTemp3 ' + resultTemp3);
+            resultTemp4 = result[4];
+            console.log('resultTemp4 ' + resultTemp4);
+            resultTemp5 = result[5];
+            console.log('resultTemp5 ' + resultTemp5);
+            resultTemp6 = result[6];
+            console.log('resultTemp6 ' + resultTemp6);
+        }
+          ,
+
+          (err) => {        this.response = err;  this.showLoading = false;},
+
+          () => {
+            let resultTemp =
+              text +
+              resultTemp0 +
+              resultTemp1 +
+              resultTemp2 +
+              resultTemp3 +
+              resultTemp4 +
+              resultTemp5 +
+              resultTemp6;
+            this.response =  this.markdownService.parse(resultTemp)  as string;
+            this.showLoading = false;
+
+          });
     });
+    */
+
+    // TODO create list of the tools for the recording
+    // todo reponse how to make line break and do I need title
+    // TODO MODEL FOR GRAMMAR TASK NO NEED TO CREATE EXPLANATION
+    // todo model no need to give instructions and conclusions
+    /*
+
+    Dear Students,
+
+For your homework this week, we will practice greetings and the Present Simple tense. Please complete all tasks.
+
+Conclusion:
+
+Remember to practice using greetings and the present simple verb tense when speaking. This will help you communicate effectively and confidently in English. Don’t forget to smile when you greet others; it makes a big difference! Keep practicing, and let's say "hello" to new learning opportunities!\
+
+     */
 
 
 /*    this.openaiService.getChatCompletion(lecture)
