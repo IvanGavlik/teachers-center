@@ -84,41 +84,36 @@ export class LectureGeneratorComponent  implements OnInit {
     let resultTemp4 = '';
     let resultTemp5 = '';
     let resultTemp6 = '';
-    let allTemp = '';
+    let allTemp = "";
 
     this.openaiService.generateLectureText(queryParams).subscribe((text: any) => {
-      console.log("text " + text);
-      allTemp = text;
+      allTemp = allTemp + this.markdownService.parse(text);
 
       this.openaiService.generateTextQuestions(text,queryParams).subscribe((textQuestions) => {
-        console.log("textQuestions " + textQuestions);
-        allTemp = allTemp + textQuestions;
+        allTemp = allTemp + this.markdownService.parse(textQuestions);
+
         this.openaiService.generateGrammarExplanation(text,queryParams).subscribe((grammarExplanation) => {
-          console.log("grammarExplanation " + grammarExplanation);
-          allTemp = allTemp + grammarExplanation;
+          allTemp = allTemp + this.markdownService.parse(grammarExplanation);
 
           this.openaiService.generateGrammarExercises(text,queryParams).subscribe((grammarExercises) => {
-            console.log("grammarExercises " + grammarExercises);
-            allTemp = allTemp + grammarExercises;
+            allTemp = allTemp + this.markdownService.parse(grammarExercises);
 
             this.openaiService.generateHomework(text,queryParams).subscribe((homework) => {
-              console.log("homework " + homework);
-              allTemp = allTemp + homework;
+              allTemp = allTemp + this.markdownService.parse(homework);
 
               this.openaiService.generateDiscussion(text,queryParams).subscribe((discussion) => {
-                console.log("discussion " + discussion);
-                allTemp = allTemp + discussion;
+                allTemp = allTemp + this.markdownService.parse(discussion)
 
                 this.openaiService.generateDictionary(text,queryParams).subscribe((dictionary) => {
-                  console.log("dictionary " + dictionary);
-                  allTemp = allTemp + dictionary;
+                  allTemp = allTemp + this.markdownService.parse(dictionary);
 
                   this.openaiService.generatePhrases(text,queryParams)
                     .subscribe(
                     (res) => {
-                      console.log("Phrases " + res);
-                      allTemp = allTemp + res;
-                      this.response =  this.markdownService.parse(allTemp)  as string;
+                      allTemp = allTemp + this.markdownService.parse(res) ;
+                      console.log(allTemp);
+                      this.response =  allTemp;
+
                     },
                     (err) => {
                       this.showLoading = false;
