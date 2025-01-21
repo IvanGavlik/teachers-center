@@ -17,7 +17,11 @@ export class TextAnalysisComponent {
   response: any = '';
   progress: any = '';
   showLoading: boolean = false;
+  input: any = 'TEXT';
 
   onSubmit(contactForm: any) {}
 
+  setinput(text: string) {
+    this.input = text;
+  }
 }
