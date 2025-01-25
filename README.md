@@ -28,9 +28,15 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ## Deploy prod
 
-https://angular.dev/tools/cli/deployment#automatic-deployment-with-the-cli
+* checkout to gh-pages
+* merge from master
+* ng deploy --base-href=/teachers-center/
 
-ng deploy --base-href=/teachers-center/
+**Notes**
+* All deployment has to be done master then we merge it to gh-pages
+* Dont do push on gh-pages
+* More info on process: https://angular.dev/tools/cli/deployment#automatic-deployment-with-the-cli
+
 
 ## IDE
 
