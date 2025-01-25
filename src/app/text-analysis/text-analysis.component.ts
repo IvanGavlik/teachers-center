@@ -96,7 +96,7 @@ export class TextAnalysisComponent implements OnInit {
         .subscribe({
           next: (textFromImage) => {
 
-            this.openaiService.determineTextMetadata(contactForm.value.textFromForm).subscribe(response => {
+            this.openaiService.determineTextMetadata(textFromImage).subscribe(response => {
 
               // response Expected example English,Hi, I’m Jake,91,Present Simple
               var responseMetadata = response.split(",");
