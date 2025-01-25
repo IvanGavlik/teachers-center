@@ -2,19 +2,19 @@
   <!-- <img src="..." class="card-img-top" alt="..."> -->
   <p> </p>
   <div class="card-body">
-    <h5 class="card-title">Generate lecture</h5>
-    <p class="card-text">Helps teacher quickly create engaging, professional slides tailored to their lesson content and objectives.</p>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Launch</button>
+    <h5 class="card-title">Analyze text</h5>
+    <p class="card-text">Helps teacher to analyze provided text from the grammar and vocabulary perspective
+      and create engaging, professional content.
+    </p>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#textAnalysisModal">Launch</button>
   </div>
 </div>
-
-
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="textAnalysisModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" style="max-width:70%">
     <div class="modal-content">
       <form #contactForm="ngForm" (ngSubmit)="onSubmit(contactForm)" >
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Generate lecture</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Analyze text</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -22,12 +22,7 @@
             <div class="row" >
               <div class="col-5">
                 <div class="row">
-                  <div class="col-6">
-                    <div class="mb-3">
-                      <input type="text" class="form-control" placeholder="Language" id="language" name="language" ngModel>
-                    </div>
-                  </div>
-                  <div class="col-6">
+                  <div class="col-12">
                     <div class="mb-3">
                       <select class="form-select" aria-label="Default select example" name="languageLevel" ngModel >
                         <option selected value="A1" >A1</option>
@@ -40,20 +35,34 @@
                     </div>
                   </div>
                 </div>
-                <div class="row">
+                <div class="row" >
                   <div class="col-12">
+                    <div class="btn-group" style=" width: 100%;" role="group" aria-label="Basic radio toggle button group">
+                      <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" (click)="setinput('TEXT')" checked>
+                      <label class="btn btn-outline-secondary" for="btnradio1">Text</label>
+                      <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" (click)="setinput('IMAGE')" >
+                      <label class="btn btn-outline-secondary" for="btnradio2">Image</label>
+                    </div>
+                    <div class="row" style="margin-top: 1em" >
+                      <div class="col-12" [hidden]="input != 'TEXT'" >
+                        <textarea class="form-control" placeholder="Put text to analyze" rows="7" name="textFromForm" ngModel ></textarea>
+                      </div>
+                      <div class="col-12" [hidden]="input != 'IMAGE'" >
+                        <div class="mb-3">
+                          <label for="formFile" class="form-label">Select image containing text</label>
+                          <input class="form-control" type="file" id="formFile" value="selectedFile" (change)="onFileSelected($event)">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="row" style="margin-top: 0.5em;">
+                  <div class="col-6">
                     <h5> Vocabulary </h5>
                   </div>
-                  <div class="col-12">
-                    <div class="mb-3">
-                      <textarea class="form-control" placeholder="Topic" id="topic" rows="1" name="vocabularyTopic" ngModel ></textarea>
-                    </div>
-                  </div>
                   <div class="col-6">
-                    <div class="mb-3">
-                      <label for="vocabularySize" class="form-label">Size (number of words)</label>
-                      <input type="number" class="form-control" id="vocabularySize" name="vocabularySize" ngModel >
-                    </div>
+                    <h5> Grammar </h5>
                   </div>
                   <div class="col-6">
                     <div class="mb-3">
@@ -68,29 +77,7 @@
                       </select>
                     </div>
                   </div>
-                </div>
-                <div class="row" >
-                  <div class="col-12">
-                    <h5> Grammar </h5>
-                  </div>
-                  <div class="col-12">
-                    <div class="mb-3">
-                      <textarea class="form-control" placeholder="Topic" id="grammarTopic" rows="1" name="grammarTopic" ngModel ></textarea>
-                    </div>
-                  </div>
-                  <div class="col-6">
-                    <div class="mb-3">
-                      <label for="grammarExamples" class="form-label">Generate examples</label>
-                      <select class="form-select" id="grammarExamples" aria-label="Default select example" name="grammarExamples" ngModel>
-                        <option selected value="0" >0</option>
-                        <option value="5">5</option>
-                        <option value="7">7</option>
-                        <option value="10">10</option>
-                        <option value="12">12</option>
-                        <option value="15">15</option>
-                      </select>
-                    </div>
-                  </div>
+
                   <div class="col-6">
                     <div class="mb-3">
                       <label for="grammarExercises" class="form-label">Generate exercises</label>
@@ -104,8 +91,9 @@
                       </select>
                     </div>
                   </div>
+
                 </div>
-                <div class="row" >
+                 <div class="row" >
                   <div class="col-12">
                     <h5> Include </h5>
                   </div>
@@ -144,12 +132,12 @@
 
                 </div>
               </div>
-              <div class="col-7" style="border 1px solid black 25%; overflow: auto; height: 600px; background: #d9d9d9" > <!-- #e6e6e6 -->
+              <div class="col-7" style="border: 1px solid black 25%; overflow: auto; height: 600px; background: #d9d9d9" > <!-- #e6e6e6 -->
                 <div [innerHTML]="response"></div>
                 <p style="height: 40%"> </p>
                 <p style="text-align: center;" *ngIf="showLoading" > This is test version.  </p>
                 <p style="text-align: center;" *ngIf="showLoading" [innerHTML]="progress" >  </p>
-                <p style="text-align: center;" *ngIf="showLoading" >   Generating lecture needs some time.
+                <p style="text-align: center;" *ngIf="showLoading" >   Analyzing text needs some time.
                   <!--It is done in
                   <countdown #cd [config]="{ leftTime: 45, format: 'mm:ss' }" (event)="handleEvent($event)" />
                   -->

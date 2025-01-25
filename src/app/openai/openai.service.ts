@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import { OnInit } from '@angular/core';
 import {Observable, forkJoin, mergeMap} from 'rxjs';
 import { Lecture } from '../lecture-generator/lecture';
 
@@ -9,11 +8,27 @@ import { Lecture } from '../lecture-generator/lecture';
 })
 export class OpenaiService {
 
-  private baseUrl = 'https://teachers-center-be.onrender.com';
+   private baseUrl = 'https://teachers-center-be.onrender.com';
 //private baseUrl = 'http://localhost:3000';
 
 
    constructor(private http: HttpClient) {}
+
+  // Method to call text-analysis/image-to-text
+  imageToText(selectedFile: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', selectedFile, selectedFile.name);
+    return this.http
+      .post(`${this.baseUrl}/text-analysis/image-to-text`, formData, { responseType: 'text' });
+  }
+
+  // Method to call text-analysis/determine-text-metadata
+  determineTextMetadata(textInput: string): Observable<any> {
+    return  this.http.post(`${this.baseUrl}/text-analysis/determine-text-metadata`,
+      { text: textInput }, // Body includes the lectureTextResponse
+      {  responseType: 'text' }
+    )
+  }
 
   // Method to call /generate-lecture/lecture-text
   generateLectureText(queryParams: HttpParams): Observable<any> {

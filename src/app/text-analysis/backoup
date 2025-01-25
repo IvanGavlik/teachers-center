@@ -2,32 +2,46 @@
   <!-- <img src="..." class="card-img-top" alt="..."> -->
   <p> </p>
   <div class="card-body">
-    <h5 class="card-title">Generate lecture</h5>
-    <p class="card-text">Helps teacher quickly create engaging, professional slides tailored to their lesson content and objectives.</p>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Launch</button>
+    <h5 class="card-title">Analyze text</h5>
+    <p class="card-text">Helps teacher to analyze provided text from the grammar and vocabulary perspective
+      and create engaging, professional content.
+    </p>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#textAnalysisModal">Launch</button>
   </div>
 </div>
-
-
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="textAnalysisModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" style="max-width:70%">
     <div class="modal-content">
       <form #contactForm="ngForm" (ngSubmit)="onSubmit(contactForm)" >
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Generate lecture</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Analyze text</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="container-fluid">
             <div class="row" >
-              <div class="col-5">
-                <div class="row">
-                  <div class="col-6">
+              <div class="col-6">
+                <div class="btn-group" style=" width: 100%;" role="group" aria-label="Basic radio toggle button group">
+                  <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" (click)="setinput('TEXT')" checked>
+                  <label class="btn btn-outline-secondary" for="btnradio1">Text</label>
+                  <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" (click)="setinput('IMAGE')" >
+                  <label class="btn btn-outline-secondary" for="btnradio2">Image</label>
+                </div>
+                <div class="row" style="margin-top: 1em" >
+                  <div class="col-12" *ngIf="input == 'TEXT'" >
+                    <textarea class="form-control" placeholder="Put text" id="topic" rows="6" name="vocabularyTopic" ngModel ></textarea>
+                  </div>
+                  <div class="col-12" *ngIf="input == 'IMAGE'" >
                     <div class="mb-3">
-                      <input type="text" class="form-control" placeholder="Language" id="language" name="language" ngModel>
+                      <label for="formFile" class="form-label">Select image</label>
+                      <input class="form-control" type="file" id="formFile">
                     </div>
                   </div>
-                  <div class="col-6">
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="row">
+                  <div class="col-12">
                     <div class="mb-3">
                       <select class="form-select" aria-label="Default select example" name="languageLevel" ngModel >
                         <option selected value="A1" >A1</option>
@@ -41,47 +55,16 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-12">
+                  <div class="col-6">
                     <h5> Vocabulary </h5>
                   </div>
-                  <div class="col-12">
-                    <div class="mb-3">
-                      <textarea class="form-control" placeholder="Topic" id="topic" rows="1" name="vocabularyTopic" ngModel ></textarea>
-                    </div>
-                  </div>
                   <div class="col-6">
-                    <div class="mb-3">
-                      <label for="vocabularySize" class="form-label">Size (number of words)</label>
-                      <input type="number" class="form-control" id="vocabularySize" name="vocabularySize" ngModel >
-                    </div>
+                    <h5> Grammar </h5>
                   </div>
                   <div class="col-6">
                     <div class="mb-3">
                       <label for="vocabularyQuestions" class="form-label">Generate questions</label>
                       <select class="form-select" id="vocabularyQuestions" aria-label="Default select example" name="vocabularyQuestions" ngModel>
-                        <option selected value="0" >0</option>
-                        <option value="5">5</option>
-                        <option value="7">7</option>
-                        <option value="10">10</option>
-                        <option value="12">12</option>
-                        <option value="15">15</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="row" >
-                  <div class="col-12">
-                    <h5> Grammar </h5>
-                  </div>
-                  <div class="col-12">
-                    <div class="mb-3">
-                      <textarea class="form-control" placeholder="Topic" id="grammarTopic" rows="1" name="grammarTopic" ngModel ></textarea>
-                    </div>
-                  </div>
-                  <div class="col-6">
-                    <div class="mb-3">
-                      <label for="grammarExamples" class="form-label">Generate examples</label>
-                      <select class="form-select" id="grammarExamples" aria-label="Default select example" name="grammarExamples" ngModel>
                         <option selected value="0" >0</option>
                         <option value="5">5</option>
                         <option value="7">7</option>
@@ -115,44 +98,39 @@
                       <label class="form-check-label" for="homework" >Homework</label>
                     </div>
                   </div>
-                  <!--					<div class="col-12">
-                     <div class="mb-3 form-check">
-                       <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                       <label class="form-check-label" for="exampleCheck1">Games on v</label>
-                     </div>
-                     </div> -->
-                  <div class="col-12">
-                    <div class="mb-3 form-check">
-                      <input type="checkbox" class="form-check-input" id="discussion" name="discussion" ngModel >
-                      <label class="form-check-label" for="discussion">Discussion questions for a dialogue</label>
-                    </div>
-                  </div>
                   <div class="col-12">
                     <div class="mb-3 form-check">
                       <input type="checkbox" class="form-check-input" id="dictionary" name="dictionary" ngModel  >
                       <label class="form-check-label" for="dictionary">Dictionary on vocabulary topic</label>
                     </div>
                   </div>
-
-
                   <div class="col-12">
                     <div class="mb-3 form-check">
                       <input type="checkbox" class="form-check-input" id="commonPhrases" name="commonPhrases" ngModel  >
                       <label class="form-check-label" for="commonPhrases">Common phrases on topic</label>
                     </div>
                   </div>
-
+                  <div class="col-12">
+                    <div class="mb-3 form-check">
+                      <input type="checkbox" class="form-check-input" id="discussion" name="discussion" ngModel >
+                      <label class="form-check-label" for="discussion">Discussion questions for a dialogue</label>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="col-7" style="border 1px solid black 25%; overflow: auto; height: 600px; background: #d9d9d9" > <!-- #e6e6e6 -->
+            </div>
+            <div class="row" >
+              <div class="col-12" style="border: 1px solid black 25%; background: #d9d9d9" >
+                <!-- #e6e6e6 -->
                 <div [innerHTML]="response"></div>
                 <p style="height: 40%"> </p>
                 <p style="text-align: center;" *ngIf="showLoading" > This is test version.  </p>
                 <p style="text-align: center;" *ngIf="showLoading" [innerHTML]="progress" >  </p>
-                <p style="text-align: center;" *ngIf="showLoading" >   Generating lecture needs some time.
+                <p style="text-align: center;" *ngIf="showLoading" >
+                  Generating lecture needs some time.
                   <!--It is done in
-                  <countdown #cd [config]="{ leftTime: 45, format: 'mm:ss' }" (event)="handleEvent($event)" />
-                  -->
+                     <countdown #cd [config]="{ leftTime: 45, format: 'mm:ss' }" (event)="handleEvent($event)" />
+                     -->
                 </p>
                 <div class="d-flex justify-content-center" *ngIf="showLoading" >
                   <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
