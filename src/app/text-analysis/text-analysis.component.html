@@ -44,13 +44,13 @@
                       <label class="btn btn-outline-secondary" for="btnradio2">Image</label>
                     </div>
                     <div class="row" style="margin-top: 1em" >
-                      <div class="col-12" *ngIf="input == 'TEXT'" >
-                        <textarea class="form-control" placeholder="Put text to analyze" id="text" rows="7" name="vocabularyTopic" ngModel ></textarea>
+                      <div class="col-12" [hidden]="input != 'TEXT'" >
+                        <textarea class="form-control" placeholder="Put text to analyze" rows="7" name="textFromForm" ngModel ></textarea>
                       </div>
-                      <div class="col-12" *ngIf="input == 'IMAGE'" >
+                      <div class="col-12" [hidden]="input != 'IMAGE'" >
                         <div class="mb-3">
                           <label for="formFile" class="form-label">Select image containing text</label>
-                          <input class="form-control" type="file" id="formFile"  (change)="onFileSelected($event)">
+                          <input class="form-control" type="file" id="formFile" value="selectedFile" (change)="onFileSelected($event)">
                         </div>
                       </div>
                     </div>
@@ -132,12 +132,12 @@
 
                 </div>
               </div>
-              <div class="col-7" style="border 1px solid black 25%; overflow: auto; height: 600px; background: #d9d9d9" > <!-- #e6e6e6 -->
+              <div class="col-7" style="border: 1px solid black 25%; overflow: auto; height: 600px; background: #d9d9d9" > <!-- #e6e6e6 -->
                 <div [innerHTML]="response"></div>
                 <p style="height: 40%"> </p>
                 <p style="text-align: center;" *ngIf="showLoading" > This is test version.  </p>
                 <p style="text-align: center;" *ngIf="showLoading" [innerHTML]="progress" >  </p>
-                <p style="text-align: center;" *ngIf="showLoading" >   Generating lecture needs some time.
+                <p style="text-align: center;" *ngIf="showLoading" >   Analyzing text needs some time.
                   <!--It is done in
                   <countdown #cd [config]="{ leftTime: 45, format: 'mm:ss' }" (event)="handleEvent($event)" />
                   -->

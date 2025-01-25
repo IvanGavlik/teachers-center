@@ -25,7 +25,9 @@ export class TextAnalysisComponent implements OnInit {
   input: any = 'TEXT';
   selectedFile: File | null = null;
 
-  constructor(private http: HttpClient, private openaiService: OpenaiService, private markdownService: MarkdownService) {
+  // TODO if text does not math language level simplfly if and vice versa - make text compatible with language level
+  // should this be new tool
+  constructor(private openaiService: OpenaiService, private markdownService: MarkdownService) {
   }
 
   ngOnInit(): void {
@@ -39,76 +41,103 @@ export class TextAnalysisComponent implements OnInit {
   }
 
   onFileSelected(event: Event): void {
-    console.log("selected file try ");
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      console.log("selected file " + input.files[0]);
       this.selectedFile = input.files[0];
     }
   }
 
   onSubmit(contactForm: any) {
 
-    if (!this.selectedFile) {
+    if (!this.selectedFile && !contactForm.value.textFromForm) {
       alert('Please put text or image or text.');
       return;
     }
 
-    const formData = new FormData();
-    formData.append('file', this.selectedFile, this.selectedFile.name);
+    if (this.input  == 'TEXT' && contactForm.value.textFromForm) {
 
+      this.showLoading = true;
+      this.response = '';
 
-    // Send file to backend
-    this.http
-      .post('http://localhost:3000/text-analysis/image-to-text', formData, { responseType: 'text' }) // Assuming the backend returns plain text
-      .subscribe({
-        next: (textFromImage) => {
-          console.log('Response from server:', textFromImage);
-          alert('File processed successfully! Output: ' + textFromImage);
+      this.openaiService.determineTextMetadata(contactForm.value.textFromForm).subscribe(response => {
 
-          this.http.post('http://localhost:3000/text-analysis/determine-text-metadata',
-            { text: textFromImage }, // Body includes the lectureTextResponse
-            {  responseType: 'text' }
-          ).subscribe(response => {
+        // response Expected example English,Hi, I’m Jake,91,Present Simple
+        var responseMetadata = response.split(",");
+        this.sendPrompt(new Lecture(
+            responseMetadata[0], // language
+            !contactForm.value.languageLevel ?  'A1' : contactForm.value.languageLevel.trim(),
+            responseMetadata[1], // topic
+            parseInt(responseMetadata[2]), // topic size
+            !contactForm.value.vocabularyQuestions ? 0 : contactForm.value.vocabularyQuestions,
+            responseMetadata[3], // grammar topic
+            3, // grammar examples
+            !contactForm.value.grammarExercises ? 0 : contactForm.value.grammarExercises,
+            !contactForm.value.homework  ? false : contactForm.value.homework,
+            !contactForm.value.discussion   ? false : contactForm.value.discussion,
+            !contactForm.value.dictionary   ? false : contactForm.value.dictionary,
+            !contactForm.value.commonPhrases   ? false : contactForm.value.commonPhrases
+          ),
+          contactForm.value.textFromForm
+        );
 
-            console.log("determine-text-metadata response " + response);
+      });
 
-            // response Expected example English,Hi, I’m Jake,91,Present Simple
-            var responseMetadata = response.split(",");
-           this.sendPrompt(new Lecture(
-              responseMetadata[0], // language
-              !contactForm.value.languageLevel ?  'A1' : contactForm.value.languageLevel.trim(),
-              responseMetadata[1], // topic
-              parseInt(responseMetadata[2]), // topic size
-              !contactForm.value.vocabularyQuestions ? 0 : contactForm.value.vocabularyQuestions,
-              responseMetadata[3], // grammar topic
-              3, // grammar examples
-              !contactForm.value.grammarExercises ? 0 : contactForm.value.grammarExercises,
-              !contactForm.value.homework  ? false : contactForm.value.homework,
-              !contactForm.value.discussion   ? false : contactForm.value.discussion,
-              !contactForm.value.dictionary   ? false : contactForm.value.dictionary,
-              !contactForm.value.commonPhrases   ? false : contactForm.value.commonPhrases
-            ),
-              textFromImage
+      return;
+
+    }
+
+    if(this.input  == 'IMAGE' && this.selectedFile) {
+
+      this.showLoading = true;
+      this.response = '';
+
+      // Send file to backend
+      this.openaiService.imageToText(this.selectedFile) // Assuming the backend returns plain text
+        .subscribe({
+          next: (textFromImage) => {
+
+            this.openaiService.determineTextMetadata(contactForm.value.textFromForm).subscribe(response => {
+
+              // response Expected example English,Hi, I’m Jake,91,Present Simple
+              var responseMetadata = response.split(",");
+              this.sendPrompt(new Lecture(
+                  responseMetadata[0], // language
+                  !contactForm.value.languageLevel ?  'A1' : contactForm.value.languageLevel.trim(),
+                  responseMetadata[1], // topic
+                  parseInt(responseMetadata[2]), // topic size
+                  !contactForm.value.vocabularyQuestions ? 0 : contactForm.value.vocabularyQuestions,
+                  responseMetadata[3], // grammar topic
+                  3, // grammar examples
+                  !contactForm.value.grammarExercises ? 0 : contactForm.value.grammarExercises,
+                  !contactForm.value.homework  ? false : contactForm.value.homework,
+                  !contactForm.value.discussion   ? false : contactForm.value.discussion,
+                  !contactForm.value.dictionary   ? false : contactForm.value.dictionary,
+                  !contactForm.value.commonPhrases   ? false : contactForm.value.commonPhrases
+                ),
+                textFromImage
               );
 
-          });
+            });
 
-        },
-        error: (error) => {
-          console.error('Error uploading file:', error);
-          alert('Failed to process the file. Please try again.');
-        }
-      });
+          },
+          error: (error) => {
+            console.error('Error uploading file:', error);
+            alert('Failed to process the file. Please try again.');
+          }
+        });
+
+      return;
+
+    }
+
+    // case image selected but I am on tab with text and vice versa
+    alert('Please put text or image or text.');
 
   }
 
   sendPrompt(lecture: Lecture, text: any) {
 
     //  this.countdown.begin();
-
-    this.showLoading = true;
-    this.response = '';
 
 //    this.openaiService.getChatCompletion(lecture);
 
