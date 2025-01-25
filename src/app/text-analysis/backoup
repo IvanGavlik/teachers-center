@@ -20,7 +20,26 @@
         <div class="modal-body">
           <div class="container-fluid">
             <div class="row" >
-              <div class="col-5">
+              <div class="col-6">
+                <div class="btn-group" style=" width: 100%;" role="group" aria-label="Basic radio toggle button group">
+                  <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" (click)="setinput('TEXT')" checked>
+                  <label class="btn btn-outline-secondary" for="btnradio1">Text</label>
+                  <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" (click)="setinput('IMAGE')" >
+                  <label class="btn btn-outline-secondary" for="btnradio2">Image</label>
+                </div>
+                <div class="row" style="margin-top: 1em" >
+                  <div class="col-12" *ngIf="input == 'TEXT'" >
+                    <textarea class="form-control" placeholder="Put text" id="topic" rows="6" name="vocabularyTopic" ngModel ></textarea>
+                  </div>
+                  <div class="col-12" *ngIf="input == 'IMAGE'" >
+                    <div class="mb-3">
+                      <label for="formFile" class="form-label">Select image</label>
+                      <input class="form-control" type="file" id="formFile">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
                 <div class="row">
                   <div class="col-12">
                     <div class="mb-3">
@@ -35,29 +54,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="row" >
-                  <div class="col-12">
-                    <div class="btn-group" style=" width: 100%;" role="group" aria-label="Basic radio toggle button group">
-                      <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" (click)="setinput('TEXT')" checked>
-                      <label class="btn btn-outline-secondary" for="btnradio1">Text</label>
-                      <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" (click)="setinput('IMAGE')" >
-                      <label class="btn btn-outline-secondary" for="btnradio2">Image</label>
-                    </div>
-                    <div class="row" style="margin-top: 1em" >
-                      <div class="col-12" *ngIf="input == 'TEXT'" >
-                        <textarea class="form-control" placeholder="Put text to analyze" id="text" rows="7" name="vocabularyTopic" ngModel ></textarea>
-                      </div>
-                      <div class="col-12" *ngIf="input == 'IMAGE'" >
-                        <div class="mb-3">
-                          <label for="formFile" class="form-label">Select image containing text</label>
-                          <input class="form-control" type="file" id="formFile"  (change)="onFileSelected($event)">
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-                <div class="row" style="margin-top: 0.5em;">
+                <div class="row">
                   <div class="col-6">
                     <h5> Vocabulary </h5>
                   </div>
@@ -77,7 +74,6 @@
                       </select>
                     </div>
                   </div>
-
                   <div class="col-6">
                     <div class="mb-3">
                       <label for="grammarExercises" class="form-label">Generate exercises</label>
@@ -91,9 +87,8 @@
                       </select>
                     </div>
                   </div>
-
                 </div>
-                 <div class="row" >
+                <div class="row" >
                   <div class="col-12">
                     <h5> Include </h5>
                   </div>
@@ -103,44 +98,39 @@
                       <label class="form-check-label" for="homework" >Homework</label>
                     </div>
                   </div>
-                  <!--					<div class="col-12">
-                     <div class="mb-3 form-check">
-                       <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                       <label class="form-check-label" for="exampleCheck1">Games on v</label>
-                     </div>
-                     </div> -->
-                  <div class="col-12">
-                    <div class="mb-3 form-check">
-                      <input type="checkbox" class="form-check-input" id="discussion" name="discussion" ngModel >
-                      <label class="form-check-label" for="discussion">Discussion questions for a dialogue</label>
-                    </div>
-                  </div>
                   <div class="col-12">
                     <div class="mb-3 form-check">
                       <input type="checkbox" class="form-check-input" id="dictionary" name="dictionary" ngModel  >
                       <label class="form-check-label" for="dictionary">Dictionary on vocabulary topic</label>
                     </div>
                   </div>
-
-
                   <div class="col-12">
                     <div class="mb-3 form-check">
                       <input type="checkbox" class="form-check-input" id="commonPhrases" name="commonPhrases" ngModel  >
                       <label class="form-check-label" for="commonPhrases">Common phrases on topic</label>
                     </div>
                   </div>
-
+                  <div class="col-12">
+                    <div class="mb-3 form-check">
+                      <input type="checkbox" class="form-check-input" id="discussion" name="discussion" ngModel >
+                      <label class="form-check-label" for="discussion">Discussion questions for a dialogue</label>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="col-7" style="border 1px solid black 25%; overflow: auto; height: 600px; background: #d9d9d9" > <!-- #e6e6e6 -->
+            </div>
+            <div class="row" >
+              <div class="col-12" style="border: 1px solid black 25%; background: #d9d9d9" >
+                <!-- #e6e6e6 -->
                 <div [innerHTML]="response"></div>
                 <p style="height: 40%"> </p>
                 <p style="text-align: center;" *ngIf="showLoading" > This is test version.  </p>
                 <p style="text-align: center;" *ngIf="showLoading" [innerHTML]="progress" >  </p>
-                <p style="text-align: center;" *ngIf="showLoading" >   Generating lecture needs some time.
+                <p style="text-align: center;" *ngIf="showLoading" >
+                  Generating lecture needs some time.
                   <!--It is done in
-                  <countdown #cd [config]="{ leftTime: 45, format: 'mm:ss' }" (event)="handleEvent($event)" />
-                  -->
+                     <countdown #cd [config]="{ leftTime: 45, format: 'mm:ss' }" (event)="handleEvent($event)" />
+                     -->
                 </p>
                 <div class="d-flex justify-content-center" *ngIf="showLoading" >
                   <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
