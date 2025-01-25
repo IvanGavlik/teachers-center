@@ -25,16 +25,11 @@ export class LectureGeneratorComponent  implements OnInit {
 
  // @ViewChild('cd', { static: false }) private countdown: CountdownComponent;
 
-  constructor(private key: KeyService, private openaiService: OpenaiService, private markdownService: MarkdownService) {}
+  constructor(private openaiService: OpenaiService, private markdownService: MarkdownService) {}
 
   ngOnInit(): void {
      this.showLoading = false;
      this.response = '';
-
-     this.key.fetchKey().subscribe({
-      next: (data) => console.info(' key:', data),
-      error: (err) => console.error('Error fetching key:', err),
-    });;
   }
 
   onSubmit(contactForm: any) {
